@@ -1,6 +1,6 @@
 # SolidTextureNets
 
-PyTorch implementation of the solid texture synthesis model in [**On Demand Solid Texture Synthesis Using Deep 3D Networks**](https://hal.archives-ouvertes.fr/hal-01678122v3)
+PyTorch implementation of the solid texture synthesis model in the journal articla [**On Demand Solid Texture Synthesis Using Deep 3D Networks**](https://hal.archives-ouvertes.fr/hal-01678122v3) published in Computer Graphics Forum. [DOI:10.1111/cgf.13889] (https://doi.org/10.1111/cgf.13889)
 
 Code based on Gatys' Neural Style Transfer [implementation](https://github.com/leongatys/PytorchNeuralStyleTransfer)
 
