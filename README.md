@@ -12,10 +12,9 @@ It requires the libraries: PIL and PyTorch.
 
 The VGG-19 perceptual loss between 2D images uses Gatys' implementation mentioned above.
 
-To run the code you need to get the pytorch VGG19-Model from the bethge lab by running (script from https://github.com/leongatys/PytorchNeuralStyleTransfer) :
-```
-sh download_models.sh 
-```
+To run the code you need to get the pytorch VGG19-Model from the bethge lab using the script 'download_models.sh' from https://github.com/leongatys/PytorchNeuralStyleTransfer
+
+
 Using [display](https://github.com/szym/display) is optional.
 
 The names of the example textures and the associated training directions are defined by the lists **input_names** and **directions**.
