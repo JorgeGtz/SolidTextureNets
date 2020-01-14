@@ -38,7 +38,8 @@ One visualization option is [ParaView](https://www.paraview.org/). It requires t
 
 ### OpenGL
 Additionally we provide a PyOpenGL script `render_cube.py` that loads the `*.npy` file and uses it to render a simple cube. 
-The code requires OpenGL and the python libraries: pyopengl, sdl2 and pyglm 
+The code requires OpenGL and the python libraries: pyopengl, sdl2 and pyglm
+
 **texture** defines the path to the texture (*.npy) to apply.
 Use the key 's' to stop and start the rotation of cube
 
