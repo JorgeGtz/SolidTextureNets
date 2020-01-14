@@ -6,7 +6,7 @@ Code based on Gatys' Neural Style Transfer [implementation](https://github.com/l
 
 ## Training
 
-The python script `train_slice.py` trains a generator network and produces the file `*params.pytorch` that contains the trained parameters.
+The python script `train_slice.py` trains a generator network and produces the file `params.pytorch` that contains the trained parameters.
 
 It requires the libraries: PIL and PyTorch.
 
@@ -22,5 +22,13 @@ The names of the example textures and the associated training directions are def
 The example textures go in the **Textures** folder.
 
 ## Sampling on-demand
+
+The python script `sample_on_demand.py` loads the trained parameters and synthesizes a block of texture of sizes **total_H**, **total_W**, **total_D** formed of blocks of sizes **piece_height**, **piece_width**, **piece_depth**.
+
+It requires the libraries: PIL, PyTorch and cupy
+
+Indicate the location of the trained model in **model_folder**.
+
+The output file `*.npy` is a numpy 4D array with the number of channels (BGR) in the first dimension and the spatial dimensions in the next three dimensions. 
 
 ## Visualization
