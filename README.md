@@ -32,3 +32,13 @@ Indicate the location of the trained model in **model_folder**.
 The output file `*.npy` is a numpy 4D array with the number of channels (BGR) in the first dimension and the spatial dimensions in the next three dimensions. 
 
 ## Visualization
+
+### ParaView
+One visualization option is [ParaView](https://www.paraview.org/). It requires to convert the `*.npy` file to VTK. We used the library [PyEVTK](https://bitbucket.org/pauloh/pyevtk/src/default/) (see **gridToVTK**).
+
+### OpenGL
+Additionally we provide a PyOpenGL script `render_cube.py` that loads the `*.npy` file and uses it to render a simple cube. 
+The code requires OpenGL and the python libraries: pyopengl, sdl2 and pyglm 
+**texture** defines the path to the texture (*.npy) to apply.
+Use the key 's' to stop and start the rotation of cube
+
