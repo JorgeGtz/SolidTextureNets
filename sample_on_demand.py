@@ -9,7 +9,7 @@
 # J. Gutierrez, J. Rabin, B. Galerne, T. Hurtut
 #
 # Author: Jorge Gutierrez
-# Last modified: 12 Dec 2020
+# Last modified: 09 May 2021
 #
 
 import math
@@ -172,26 +172,29 @@ cellseed = cp.ElementwiseKernel(
     if (seed == 0u) seed = 1u;',
     'cellseed')
 
-wang_hash64 = cp.ElementwiseKernel(
-    'uint64 key',
-    'uint64 out_key',
-    'key = (~key) + (key << 21); \
-    key = key ^ (key >> 24); \
-    key = (key + (key << 3)) + (key << 8);\
-    key = key ^ (key >> 14); \
-    key = (key + (key << 2)) + (key << 4); \
-    key = key ^ (key >> 28); \
-    out_key = key + (key << 31);',
-    'wang_hash64')
 
+''' fix for >= Cuda 9.1 by Johannes Haataja (jsbtic @ github) '''
+wang_hash64 = cp.ElementwiseKernel(
+   'uint64 key',
+   'uint64 out_key',
+   'out_key = (~key) + (key << 21); \
+   out_key = out_key ^ (out_key >> 24); \
+   out_key = (out_key + (out_key << 3)) + (out_key << 8);\
+   out_key = out_key ^ (out_key >> 14); \
+   out_key = (out_key + (out_key << 2)) + (out_key << 4); \
+   out_key = out_key ^ (out_key >> 28); \
+   out_key = out_key + (out_key << 31);',
+   'wang_hash64')
+
+
+''' fix for >= Cuda 9.1 by Johannes Haataja (jsbtic @ github) '''
 xorshift64star = cp.ElementwiseKernel(
     'uint64 x',
-    'float32 r',
-    'x ^= x >> 12; \
-    x ^= x << 25; \
-    x ^= x >> 27; \
-    x = x * 0x2545F4914F6CDD1D; \
-    r = ((float) x) / ((float) 18446744073709551615u)',
+    'uint64 r',
+    'r = x^x >> 12; \
+    r ^= r << 25; \
+    r ^= r >> 27; \
+    r  = r * 0x2545F4914F6CDD1D;',
     'xorshift64star')
 
 def sample_noise(x1,x2,y1,y2,z1,z2,n_ch,scale):
@@ -232,21 +235,24 @@ def sample_noise(x1,x2,y1,y2,z1,z2,n_ch,scale):
 
     seed = cellseed(scale_array, x_array, y_array, z_array, ch_array)
     hash_seed = wang_hash64(seed)
-    noise = xorshift64star(hash_seed)
+    # noise = xorshift64star(hash_seed)
+    ''' fix for >= Cuda 9.1 by Johannes Haataja (jsbtic @ github) '''
+    noise = ((1.0*xorshift64star(hash_seed)) / (18446744073709551615)).astype(cp.float32)
+
     noise_cpu = cp.asnumpy(noise)
     noise_cpu = noise_cpu.reshape((n_ch,x_size,y_size,z_size))
 
     return noise_cpu
 
 
-model_folder = 'Trained/2020-01-10_brown016_exemplar_3D_2036'
+model_folder = './Trained/2020-01-10_brown016_exemplar_3D_2036'
 
 #load model
 n_input_ch = 3
 generator = MultiScaleGen3D(ch_in=n_input_ch,  ch_step=4)
 generator.load_state_dict(torch.load('./' + model_folder + '/params.pytorch'))
 generator.cuda()
-# generator.eval()
+generator.eval()
 
 
 
@@ -261,9 +267,9 @@ piece_width = 64
 piece_depth = 64
 
 # total size of the sample
-total_H = 256
-total_W =  256
-total_D =  256
+total_H = 512
+total_W = 512
+total_D = 512
 
 full_vol = np.zeros((3,total_H,total_W,total_D),dtype='uint8')
 imagenet_mean = torch.Tensor([0.40760392, 0.45795686, 0.48501961])
